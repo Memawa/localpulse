@@ -1,0 +1,6 @@
+pandas
+requests
+jupyter
+scikit-learn
+fastapi
+uvicorn
