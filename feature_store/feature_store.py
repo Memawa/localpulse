@@ -80,10 +80,11 @@ if __name__ == "__main__":
     fs = FeatureStore()
 
     # Register your features
-    fs.register_feature("avg_temp",                "Average of max and min temp",        "weather_features")
-    fs.register_feature("temp_range",              "Difference between max and min temp", "weather_features")
-    fs.register_feature("precipitation_category",  "Wet / moderate / dry classification", "weather_features")
-    fs.register_feature("temp_category",           "Hot / warm / mild / cold label",      "weather_features")
+    fs.register_feature("avg_temp_f",              "Average of max and min temp in Fahrenheit",  "weather_features")
+    fs.register_feature("temp_range_f",             "Difference between max and min temp in F",   "weather_features")
+    fs.register_feature("precipitation_category",   "Wet / moderate / dry classification",        "weather_features")
+    fs.register_feature("temp_category",            "Hot / warm / mild / cold label",             "weather_features")
+    fs.register_feature("temp_stability",           "High / moderate / stable temp variability",  "weather_features")
 
     # List all registered features
     fs.list_features()
@@ -93,4 +94,4 @@ if __name__ == "__main__":
 
     # Query features for a specific city
     print("\nFeatures for Austin:")
-    print(fs.get_features("Austin", ["avg_temp", "temp_range", "temp_category"]))
+    print(fs.get_features("Austin TX", ["avg_temp_f", "temp_range_f", "temp_category"]))
