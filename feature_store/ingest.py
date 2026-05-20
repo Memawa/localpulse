@@ -1,6 +1,12 @@
 import requests
 import pandas as pd
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+API_KEY = os.getenv("API_DATA_GOV_KEY")
 
 CITIES = [
     {"name": "Harrisburg PA", "city": "Harrisburg", "state": "PA", "country": "US"},
