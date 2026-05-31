@@ -77,14 +77,33 @@ class FeatureStore:
 
 
 if __name__ == "__main__":
+   if __name__ == "__main__":
     fs = FeatureStore()
 
-    # Register your features
-    fs.register_feature("avg_temp_f",              "Average of max and min temp in Fahrenheit",  "weather_features")
-    fs.register_feature("temp_range_f",             "Difference between max and min temp in F",   "weather_features")
-    fs.register_feature("precipitation_category",   "Wet / moderate / dry classification",        "weather_features")
-    fs.register_feature("temp_category",            "Hot / warm / mild / cold label",             "weather_features")
-    fs.register_feature("temp_stability",           "High / moderate / stable temp variability",  "weather_features")
+    # Clear old registry and re-register everything fresh
+    conn = sqlite3.connect(fs.db_path)
+    conn.execute("DELETE FROM feature_registry")
+    conn.commit()
+    conn.close()
+    print("Registry cleared\n")
+
+    # Weather features
+    fs.register_feature("avg_temp_f",              "Average temp in Fahrenheit",               "weather_features")
+    fs.register_feature("temp_range_f",            "Difference between max and min temp in F",  "weather_features")
+    fs.register_feature("precipitation_category",  "Wet / moderate / dry classification",       "weather_features")
+    fs.register_feature("temp_category",           "Hot / warm / mild / cold label",            "weather_features")
+    fs.register_feature("temp_stability",          "High / moderate / stable temp variability", "weather_features")
+
+    # Crime features
+    fs.register_feature("violent_crime_rate",      "Violent crimes per 100k people",            "crime_features")
+    fs.register_feature("property_crime_rate",     "Property crimes per 100k people",           "crime_features")
+    fs.register_feature("safety_index",            "Safety score 0-100 (higher = safer)",       "crime_features")
+    fs.register_feature("safety_category",         "Safe / moderate / high crime label",        "crime_features")
+
+    # School features
+    fs.register_feature("student_teacher_ratio",   "Students per teacher",                      "school_features")
+    fs.register_feature("education_score",         "Education quality score 0-100",             "school_features")
+    fs.register_feature("education_category",      "Excellent / good / average / poor label",   "school_features")
 
     # List all registered features
     fs.list_features()
@@ -92,6 +111,9 @@ if __name__ == "__main__":
     # See available cities
     fs.get_all_cities()
 
-    # Query features for a specific city
-    print("\nFeatures for Austin:")
-    print(fs.get_features("Austin TX", ["avg_temp_f", "temp_range_f", "temp_category"]))
+    # Test query from master table
+    conn = sqlite3.connect(fs.db_path)
+    print("\nMaster features for Harrisburg PA:")
+    df = pd.read_sql_query("SELECT * FROM master_features WHERE city = 'Harrisburg PA'", conn)
+    print(df.to_string(index=False))
+    conn.close()
