@@ -159,7 +159,7 @@ def run():
                 + CASE safety_category
                     WHEN 'safe'       THEN 20
                     WHEN 'moderate'   THEN 10
-                    WHEN 'high crime' THEN -20
+                    WHEN 'high crime' THEN -30
                     ELSE 0 END
 
                 -- Education points
