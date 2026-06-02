@@ -3,4 +3,4 @@ requests
 jupyter
 scikit-learn
 fastapi
-uvicorn
+uvicornstreamlit

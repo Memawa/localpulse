@@ -1,5 +1,13 @@
+import sys
+import os
+
+# Ensure the project root is on the path so imports work regardless of
+# which directory the script is called from.
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import sqlite3
 import pandas as pd
+from feature_store.data_quality import run_quality_checks
 
 
 def run():
@@ -185,6 +193,12 @@ def run():
 
     conn.close()
     print("\nAll transforms complete!")
+
+    # Run data quality checks now that all feature tables are built.
+    # If anything critical is wrong (missing columns, nulls, out-of-range values)
+    # this will print a full report and raise an exception so the pipeline
+    # stops loudly instead of silently producing bad data.
+    run_quality_checks()
 
 
 if __name__ == "__main__":

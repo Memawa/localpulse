@@ -20,5 +20,8 @@ raw/*.png
 Thumbs.db
 desktop.ini
 
-#Virutal Enviroment 
+#Virutal Enviroment
 venv/
+
+# Claude Code session files
+.claude/
