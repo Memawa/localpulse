@@ -19,3 +19,6 @@ raw/*.png
 # Windows system files
 Thumbs.db
 desktop.ini
+
+#Virutal Enviroment 
+venv/
