@@ -1,0 +1,50 @@
+services:
+
+  # ── Pipeline ───────────────────────────────────────────────────────────────
+  # Runs all ingestion scripts then the transform + quality checks.
+  # This service exits when done — it's a one-shot job, not a long-running server.
+  pipeline:
+    build: .
+    volumes:
+      # Mount the feature_store and raw folders from your local machine into
+      # the container. This means the database and CSVs created inside the
+      # container are saved back to your actual disk — they persist after
+      # the container stops.
+      - ./feature_store:/app/feature_store
+      - ./raw:/app/raw
+    env_file:
+      # Pass your API key from .env into the container as an environment variable.
+      # The .env file itself is never copied into the image (it's in .dockerignore).
+      - .env
+    command: >
+      sh -c "
+        python feature_store/ingest.py &&
+        python feature_store/ingest_crime.py &&
+        python feature_store/ingest_schools.py &&
+        python transforms/transform.py
+      "
+
+  # ── API ────────────────────────────────────────────────────────────────────
+  # Serves the FastAPI endpoint on port 8000.
+  # depends_on: pipeline means Docker starts the pipeline first.
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./feature_store:/app/feature_store
+    depends_on:
+      - pipeline
+    command: uvicorn api:app --host 0.0.0.0 --port 8000
+
+  # ── Dashboard ──────────────────────────────────────────────────────────────
+  # Serves the Streamlit dashboard on port 8501.
+  dashboard:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./feature_store:/app/feature_store
+    depends_on:
+      - pipeline
+    command: streamlit run dashboard.py --server.address 0.0.0.0 --server.port 8501 --server.headless true

@@ -1,0 +1,28 @@
+# Virtual environment — containers install their own deps via requirements.txt
+venv/
+
+# Generated files — the pipeline creates these at runtime inside the container
+raw/*.csv
+feature_store/*.db
+
+# Claude Code session files
+.claude/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+notebooks/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Git history — not needed inside the container
+.git/
+
+# Local env file — secrets are passed via environment variables in docker-compose
+.env
+
+# OS files
+.DS_Store
+Thumbs.db

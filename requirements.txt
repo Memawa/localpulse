@@ -3,4 +3,6 @@ requests
 jupyter
 scikit-learn
 fastapi
-uvicornstreamlit
+uvicorn
+streamlit
+python-dotenv
